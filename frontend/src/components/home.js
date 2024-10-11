@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; // Importa el hook de traducción
-import { Container, Typography, Button, Box, MenuItem, Select } from '@mui/material';
+import { Container, Typography, Button, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { loadLocales } from '../i18n'; // Ajusta la ruta según la ubicación de i18n.js
 
 function Home({ onNewQuiz, onLoadQuiz }) {
@@ -34,14 +34,6 @@ function Home({ onNewQuiz, onLoadQuiz }) {
         {t('instructions')}
       </Typography>
 
-      <Select value={language} onChange={handleLanguageChange} sx={{ mt: 2, mb: 4 }}>
-        {Object.keys(availableLanguages).map((code) => (
-          <MenuItem key={code} value={code}>
-            {availableLanguages[code].translation.language} {/* Muestra el nombre del idioma */}
-          </MenuItem>
-        ))}
-      </Select>
-
       <Box sx={{ mt: 4 }}>
         <Button variant="contained" color="primary" onClick={onNewQuiz} sx={{ mr: 2 }}>
           {t('newQuiz')}
@@ -50,6 +42,24 @@ function Home({ onNewQuiz, onLoadQuiz }) {
           {t('loadQuiz')}
         </Button>
       </Box>
+
+      <FormControl sx={{ mt: 4 }}>
+        <InputLabel id="language-label">{t('language')}</InputLabel>
+        <Select
+          labelId="language-label"
+          id="language-select"
+          value={language}
+          label={t('language')} // Asegúrate de pasar la prop "label"
+          onChange={handleLanguageChange}
+        >
+          {Object.keys(availableLanguages).map((code) => (
+            <MenuItem key={code} value={code}>
+              {availableLanguages[code].translation.lang} {/* Muestra el nombre del idioma */}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
     </Container>
   );
 }

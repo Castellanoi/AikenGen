@@ -27,6 +27,8 @@ function createWindow() {
     },
   });
 
+  mainWindow.setMenu(null); // Oculta la barra de menú
+
   const startUrl = isDev
     ? 'http://localhost:3000'
     : `file://${path.join(__dirname, '/frontend/build/index.html')}`;

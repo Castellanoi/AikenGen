@@ -1,0 +1,7 @@
+{
+    "language": "English",
+    "welcome": "Welcome to the quiz creation app",
+    "instructions": "Here you can create questions in Aiken format for Moodle.",
+    "newQuiz": "New",
+    "loadQuiz": "Load"
+}

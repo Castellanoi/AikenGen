@@ -1,2 +1,2 @@
 # AikenGen
-Aplicación de código abierto para convertir preguntas de Moodle al formato Aiken
+Aplicación de código abierto para generar preguntas de Moodle en formato Aiken.

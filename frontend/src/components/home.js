@@ -5,24 +5,37 @@ import { loadLocales } from '../i18n'; // Ajusta la ruta según la ubicación de
 
 function Home({ onNewQuiz, onLoadQuiz }) {
   const { t, i18n } = useTranslation();  // Obtener la función t para acceder a las traducciones
-  const [language, setLanguage] = useState(localStorage.getItem('language') || 'es'); // Estado para el idioma
+  const [language, setLanguage] = useState('es'); // Estado para el idioma
   const availableLanguages = loadLocales(); // Usa loadLocales para obtener idiomas disponibles
 
-  // Cambiar el idioma y guardarlo en localStorage
+  // Acceder a los métodos expuestos por el preload
+  const { readConfig, writeConfig } = window.api;
+
+  // Cambiar el idioma y guardarlo en la configuración
   const handleLanguageChange = (event) => {
     const selectedLanguage = event.target.value;
     setLanguage(selectedLanguage);
     i18n.changeLanguage(selectedLanguage);
-    localStorage.setItem('language', selectedLanguage); // Guarda el idioma seleccionado
+
+    // Guardar el idioma seleccionado en la configuración
+    writeConfig({ language: selectedLanguage });
   };
 
-  // Cargar el idioma desde localStorage al iniciar la aplicación
+  // Cargar el idioma desde la configuración al iniciar la aplicación
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-      i18n.changeLanguage(savedLanguage);
-    }
+    const loadConfig = async () => {
+      try {
+        const config = await readConfig(); // Leer la configuración
+        if (config && config.language) {
+          setLanguage(config.language);
+          i18n.changeLanguage(config.language);
+        }
+      } catch (error) {
+        console.error('Error leyendo la configuración:', error);
+      }
+    };
+
+    loadConfig(); // Ejecutamos la función asíncrona
   }, [i18n]);
 
   return (
@@ -70,7 +83,6 @@ function Home({ onNewQuiz, onLoadQuiz }) {
           </Select>
         </FormControl>
       </Box>
-
     </Container>
   );
 }

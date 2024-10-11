@@ -11,36 +11,35 @@
  * para más detalles.
  */
 
-const { app, BrowserWindow, screen } = require('electron');
+const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
+const config = require('./config/config.js');
 
 const isDev = process.env.NODE_ENV === 'development';
 
 let mainWindow;
 
 function createWindow() {
-  // Obtener las dimensiones de la pantalla principal
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
-  // Crear la ventana utilizando el ancho y alto de la pantalla
-  const mainWindow = new BrowserWindow({
-    width: width,   // Utiliza el ancho total de la pantalla
-    height: height, // Utiliza el alto total de la pantalla
+  mainWindow = new BrowserWindow({
+    width: width,
+    height: height,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: false, // Mantenerlo en falso por seguridad
+      contextIsolation: true,  // Aislar el contexto para mayor seguridad
+      preload: path.join(__dirname, 'preload.js') // Aquí cargamos el preload script
     }
   });
 
-  mainWindow.setMenu(null); // Oculta la barra de menú
+  mainWindow.setMenu(null);
 
   const startUrl = isDev
     ? 'http://localhost:3000'
     : `file://${path.join(__dirname, '/frontend/build/index.html')}`;
 
   mainWindow.loadURL(startUrl);
-
-  // Maximizar la ventana automáticamente
   mainWindow.maximize();
 
   if (isDev) {
@@ -55,6 +54,15 @@ function createWindow() {
 }
 
 app.on('ready', createWindow);
+
+// IPC Handlers for config management
+ipcMain.handle('read-config', async () => {
+  return config.readConfig();  // Devuelve la configuración
+});
+
+ipcMain.on('write-config', (event, data) => {
+  config.writeConfig(data);  // Escribe la configuración
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

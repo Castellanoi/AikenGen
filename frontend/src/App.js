@@ -11,18 +11,45 @@
  * para más detalles.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import Home from './components/home';
 import Navbar from './components/Navbar';
 
 function App() {
+  // Acceder a los métodos expuestos por el preload
+  const { readConfig, writeConfig } = window.api;
+
   // Estado para el tema claro/oscuro
   const [themeMode, setThemeMode] = useState('light');
 
+  // Leer la configuración cuando el componente se monta
+  useEffect(() => {
+    // Función asíncrona para leer la configuración
+    const loadConfig = async () => {
+      try {
+        const config = await readConfig(); // Esperamos a que la promesa se resuelva
+        if (config && config.themeMode) {
+          setThemeMode(config.themeMode); // Si existe un tema guardado, lo aplicamos
+        }
+      } catch (error) {
+        console.error('Error leyendo la configuración:', error);
+      }
+    };
+
+    loadConfig(); // Ejecutamos la función asíncrona
+  }, []); // Solo se ejecuta una vez al montar el componente
+
   // Función para alternar entre tema claro/oscuro
   const toggleTheme = () => {
-    setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    setThemeMode((prevMode) => {
+      const newTheme = prevMode === 'light' ? 'dark' : 'light';
+
+      // Guardar la configuración cada vez que se cambia el tema
+      writeConfig({ themeMode: newTheme });
+
+      return newTheme;
+    });
   };
 
   // Crear el tema dinámico

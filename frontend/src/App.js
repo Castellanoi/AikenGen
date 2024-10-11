@@ -11,24 +11,33 @@
  * para más detalles.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import Home from './components/home';
+import Navbar from './components/Navbar';
 
 function App() {
-  const handleNewQuiz = () => {
-    console.log('Crear nuevo cuestionario');
-    // Aquí iría la lógica para comenzar un nuevo cuestionario
+  // Estado para el tema claro/oscuro
+  const [themeMode, setThemeMode] = useState('light');
+
+  // Función para alternar entre tema claro/oscuro
+  const toggleTheme = () => {
+    setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
   };
 
-  const handleLoadQuiz = () => {
-    console.log('Cargar cuestionario existente');
-    // Aquí iría la lógica para cargar un archivo de cuestionario
-  };
+  // Crear el tema dinámico
+  const theme = createTheme({
+    palette: {
+      mode: themeMode,
+    },
+  });
 
   return (
-    <div className="App">
-      <Home onNewQuiz={handleNewQuiz} onLoadQuiz={handleLoadQuiz} />
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Navbar onToggleTheme={toggleTheme} currentTheme={themeMode} />
+      <Home onNewQuiz={() => console.log('Nuevo Quiz')} onLoadQuiz={() => console.log('Cargar Quiz')} />
+    </ThemeProvider>
   );
 }
 

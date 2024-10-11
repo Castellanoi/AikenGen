@@ -26,7 +26,7 @@ function Home({ onNewQuiz, onLoadQuiz }) {
   }, [i18n]);
 
   return (
-    <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: '100px' }}>
+    <Container maxWidth="lg" style={{ textAlign: 'center', marginTop: '100px' }}>
       <Typography variant="h4" gutterBottom>
         {t('welcome')}
       </Typography>
@@ -43,22 +43,33 @@ function Home({ onNewQuiz, onLoadQuiz }) {
         </Button>
       </Box>
 
-      <FormControl sx={{ mt: 4 }}>
-        <InputLabel id="language-label">{t('language')}</InputLabel>
-        <Select
-          labelId="language-label"
-          id="language-select"
-          value={language}
-          label={t('language')} // Asegúrate de pasar la prop "label"
-          onChange={handleLanguageChange}
-        >
-          {Object.keys(availableLanguages).map((code) => (
-            <MenuItem key={code} value={code}>
-              {availableLanguages[code].translation.lang} {/* Muestra el nombre del idioma */}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 100,
+          width: 300,
+          margin: '0 auto',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <FormControl fullWidth>
+          <InputLabel id="language-label">{t('language')}</InputLabel>
+          <Select
+            labelId="language-label"
+            id="language-select"
+            value={language}
+            label={t('language')} // Asegúrate de pasar la prop "label"
+            onChange={handleLanguageChange}
+          >
+            {Object.keys(availableLanguages).map((code) => (
+              <MenuItem key={code} value={code}>
+                {availableLanguages[code].translation.lang} {/* Muestra el nombre del idioma */}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
 
     </Container>
   );

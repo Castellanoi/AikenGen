@@ -3,6 +3,7 @@
     "labLanguage": "Idioma",
     "homeTitle": "Bienvenido a la aplicación de creación de cuestionarios",
     "homeSubtitle": "Aquí puedes crear preguntas para un cuestionario en formato Aiken para Moodle.",
+    "menuName": "Nombre del archivo",
     "menuFile": "Archivo",
     "menuEdit": "Editar",
     "actNew": "Nuevo",

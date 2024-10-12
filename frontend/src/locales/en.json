@@ -3,6 +3,7 @@
     "labLanguage": "Language",
     "homeTitle": "Welcome to the quiz creation app",
     "homeSubtitle": "Here you can create questions in Aiken format for Moodle.",
+    "menuName": "File name",
     "menuFile": "File",
     "menuEdit": "Edit",
     "actNew": "New",

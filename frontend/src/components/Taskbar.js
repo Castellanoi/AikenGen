@@ -24,7 +24,6 @@ export default function Taskbar() {
     };
 
     function handleListKeyDown(event) {
-        console.log('event', event.key);
         if (event.key === 'Tab') {
             handleMenuClose();
         } else if (event.key === 'Escape') {

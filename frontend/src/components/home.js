@@ -19,10 +19,10 @@ function Home({ onNewQuiz, onLoadQuiz }) {
       </Typography>
 
       <Box sx={{ mt: 4 }}>
-        <Button variant="contained" color="primary" onClick={onNewQuiz} sx={{ mr: 2 }}>
+        <Button variant="contained" color="primary" onClick={onNewQuiz} sx={{ mr: 2 }} disableElevation>
           {t('actNewQuiz')}
         </Button>
-        <Button variant="outlined" color="secondary" onClick={onLoadQuiz}>
+        <Button variant="outlined" color="primary" onClick={onLoadQuiz}>
           {t('actLoadQuiz')}
         </Button>
       </Box>

@@ -13,15 +13,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import Home from './components/home';
 import Navbar from './components/Navbar';
+import Home from './components/Home';
+import Workspace from './components/Workspace';
 
 function App() {
   // Acceder a los métodos expuestos por el preload
   const { readConfig, writeConfig } = window.api;
-
   // Estado para el tema claro/oscuro
   const [themeMode, setThemeMode] = useState('light');
+  const [isWorkspaceVisible, setIsWorkspaceVisible] = useState(false);
 
   // Leer la configuración cuando el componente se monta
   useEffect(() => {
@@ -52,6 +53,14 @@ function App() {
     });
   };
 
+  const handleNewQuizClick = () => {
+    setIsWorkspaceVisible(true); // Cambia a la vista de Workspace
+  };
+
+  const handleBackToHome = () => {
+    setIsWorkspaceVisible(false); // Vuelve a la vista de Home
+  };
+
   // Crear el tema dinámico
   const theme = createTheme({
     palette: {
@@ -62,8 +71,19 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Navbar onToggleTheme={toggleTheme} currentTheme={themeMode} />
-      <Home onNewQuiz={() => console.log('Nuevo Quiz')} onLoadQuiz={() => console.log('Cargar Quiz')} />
+      <Navbar
+        onToggleTheme={toggleTheme}
+        currentTheme={themeMode}
+        isWorkspace={isWorkspaceVisible}
+      />
+      {isWorkspaceVisible ? (
+        <Workspace onBack={handleBackToHome} /> // Pasa la función para volver a Home
+      ) : (
+        <Home
+          onNewQuiz={handleNewQuizClick}
+          onLoadQuiz={() => console.log('Cargar Quiz')}
+        />
+      )}
     </ThemeProvider>
   );
 }

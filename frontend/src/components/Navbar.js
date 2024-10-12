@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Switch } from '@mui/material';
+import React from 'react';
+import { AppBar, Toolbar, Typography, IconButton, Switch, TextField, Box, Divider, Button } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import Taskbar from './Taskbar';
 
-function Navbar({ onToggleTheme, currentTheme }) {
+function Navbar({ onToggleTheme, currentTheme, isWorkspace }) {
   return (
-    <AppBar position="fixed" color="primary">
+    <AppBar position="fixed" color="string">
       <Toolbar>
-        {/* Nombre de la App a la izquierda */}
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          AikenGen
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+          {isWorkspace ? (
+            <>
+              <TextField
+                variant="standard"
+                label="Nombre del archivo"
+              />
+
+              <Divider orientation="vertical" sx={{ mx: 1 }} flexItem />
+
+              <Taskbar />
+            </>
+          ) : (
+            <Typography variant="h6">
+              AikenGen
+            </Typography>
+          )}
+        </Box>
 
         {/* Toggle para cambiar el tema */}
         <IconButton edge="end" color="inherit" onClick={onToggleTheme}>

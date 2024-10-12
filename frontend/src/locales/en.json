@@ -3,6 +3,18 @@
     "labLanguage": "Language",
     "homeTitle": "Welcome to the quiz creation app",
     "homeSubtitle": "Here you can create questions in Aiken format for Moodle.",
-    "actNewQuiz": "New",
-    "actLoadQuiz": "Load"
+    "menuFile": "File",
+    "menuEdit": "Edit",
+    "actNew": "New",
+    "actLoad": "Load",
+    "actSave": "Save",
+    "actSaveAs": "Save as...",
+    "actExit": "Exit",
+    "actUndo": "Undo",
+    "actRedo": "Redo",
+    "actCut": "Cut",
+    "actCopy": "Copy",
+    "actPaste": "Paste",
+    "actFind": "Find",
+    "actReplace": "Replace"
 }

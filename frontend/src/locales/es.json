@@ -3,6 +3,18 @@
     "labLanguage": "Idioma",
     "homeTitle": "Bienvenido a la aplicación de creación de cuestionarios",
     "homeSubtitle": "Aquí puedes crear preguntas para un cuestionario en formato Aiken para Moodle.",
-    "actNewQuiz": "Nuevo",
-    "actLoadQuiz": "Cargar"
+    "menuFile": "Archivo",
+    "menuEdit": "Editar",
+    "actNew": "Nuevo",
+    "actLoad": "Cargar",
+    "actSave": "Guardar",
+    "actSaveAs": "Guardar como...",
+    "actExit": "Salir",
+    "actUndo": "Deshacer",
+    "actRedo": "Rehacer",
+    "actCut": "Cortar",
+    "actCopy": "Copiar",
+    "actPaste": "Pegar",
+    "actFind": "Buscar",
+    "actReplace": "Reemplazar"
 }

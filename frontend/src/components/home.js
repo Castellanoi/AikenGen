@@ -20,10 +20,10 @@ function Home({ onNewQuiz, onLoadQuiz }) {
 
       <Box sx={{ mt: 4 }}>
         <Button variant="contained" color="primary" onClick={onNewQuiz} sx={{ mr: 2 }} disableElevation>
-          {t('actNewQuiz')}
+          {t('actNew')}
         </Button>
         <Button variant="outlined" color="primary" onClick={onLoadQuiz}>
-          {t('actLoadQuiz')}
+          {t('actLoad')}
         </Button>
       </Box>
 

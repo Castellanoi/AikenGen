@@ -5,9 +5,10 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SaveIcon from '@mui/icons-material/Save';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { useTranslation } from 'react-i18next';
 
 export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHover, onKeyDown }) {
+    const { t } = useTranslation();
     return (
         <>
             <Button
@@ -19,7 +20,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
                 color="inherit"
                 sx={{ textTransform: 'none', fontWeight: 'bold' }}
             >
-                Archivo
+                {t('menuFile')}
             </Button>
             <Popper
                 open={open}
@@ -39,7 +40,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
                                             <AddBoxIcon fontSize='small' />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            Nuevo
+                                            {t('actNew')}
                                         </ListItemText>
                                         <Typography variant="body2" color="text.secondary" sx={{ ml: 5 }}>
                                             Ctrl+N
@@ -51,7 +52,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
                                             <UploadFileIcon fontSize='small' />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            Cargar
+                                            {t('actLoad')}
                                         </ListItemText>
                                         <Typography variant="body2" color="text.secondary" sx={{ ml: 5 }}>
                                             Ctrl+O
@@ -62,7 +63,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
                                             <SaveIcon fontSize='small' />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            Guardar
+                                            {t('actSave')}
                                         </ListItemText>
                                         <Typography variant="body2" color="text.secondary" sx={{ ml: 5 }}>
                                             Ctrl+S
@@ -73,7 +74,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
                                             <SaveAsIcon fontSize='small' />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            Guardar Como
+                                            {t('actSaveAs')}
                                         </ListItemText>
                                         <Typography variant="body2" color="text.secondary" sx={{ ml: 5 }}>
                                             Ctrl+Shift+S
@@ -85,7 +86,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
                                             <CloseIcon fontSize='small' />
                                         </ListItemIcon>
                                         <ListItemText>
-                                            Salir
+                                            {t('actExit')}
                                         </ListItemText>
                                     </MenuItem>
                                 </MenuList>

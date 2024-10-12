@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, MenuItem, MenuList, Paper, Popper, Fade, ClickAwayListener } from '@mui/material';
 
-export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHover }) {
+export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHover, onKeyDown }) {
   return (
     <>
       <Button
@@ -27,7 +27,7 @@ export default function File({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
           <Fade {...TransitionProps} timeout={50}>
             <Paper>
               <ClickAwayListener onClickAway={onMenuClose}>
-                <MenuList id="file-menu" aria-labelledby="file-button">
+                <MenuList id="file-menu" aria-labelledby="file-button" autoFocusItem={open} onKeyDown={onKeyDown}>
                   <MenuItem onClick={onMenuClose}>Nuevo</MenuItem>
                   <MenuItem onClick={onMenuClose}>Guardar</MenuItem>
                   <MenuItem onClick={onMenuClose}>Cargar</MenuItem>

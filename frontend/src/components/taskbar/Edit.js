@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, MenuItem, MenuList, Paper, Popper, Fade, ClickAwayListener } from '@mui/material';
 
-export default function Edit({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHover }) {
+export default function Edit({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHover, onKeyDown }) {
   return (
     <>
       <Button
@@ -27,7 +27,7 @@ export default function Edit({ open, anchorEl, onMenuOpen, onMenuClose, onMenuHo
           <Fade {...TransitionProps} timeout={50}>
             <Paper>
               <ClickAwayListener onClickAway={onMenuClose}>
-                <MenuList id="edit-menu" aria-labelledby="edit-button">
+                <MenuList id="edit-menu" aria-labelledby="edit-button" autoFocusItem={open} onKeyDown={onKeyDown}>
                   <MenuItem onClick={onMenuClose}>Copiar</MenuItem>
                   <MenuItem onClick={onMenuClose}>Pegar</MenuItem>
                   <MenuItem onClick={onMenuClose}>Cortar</MenuItem>

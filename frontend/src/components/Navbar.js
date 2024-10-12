@@ -8,17 +8,20 @@ function Navbar({ onToggleTheme, currentTheme, isWorkspace }) {
   return (
     <AppBar position="fixed" color="string">
       <Toolbar>
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1}}>
           {isWorkspace ? (
             <>
-              <TextField
-                variant="standard"
-                label="Nombre del archivo"
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <TextField
+                  variant="standard"
+                  label="Nombre del archivo"
+                />
+                <Divider orientation="vertical" sx={{ mx: 1 }} flexItem />
+              </Box>
 
-              <Divider orientation="vertical" sx={{ mx: 1 }} flexItem />
-
-              <Taskbar />
+              <Box sx={{ mt: 'auto' }}>
+                <Taskbar />
+              </Box>
             </>
           ) : (
             <Typography variant="h6">

@@ -12,7 +12,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme, Box } from '@mui/material';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Workspace from './components/Workspace';
@@ -76,14 +76,19 @@ function App() {
         currentTheme={themeMode}
         isWorkspace={isWorkspaceVisible}
       />
-      {isWorkspaceVisible ? (
-        <Workspace onBack={handleBackToHome} /> // Pasa la función para volver a Home
-      ) : (
-        <Home
-          onNewQuiz={handleNewQuizClick}
-          onLoadQuiz={() => console.log('Cargar Quiz')}
-        />
-      )}
+
+      <Box sx={{ ...theme.mixins.toolbar }} />
+
+      <Box sx={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
+        {isWorkspaceVisible ? (
+          <Workspace onBack={handleBackToHome} /> // Pasa la función para volver a Home
+        ) : (
+          <Home
+            onNewQuiz={handleNewQuizClick}
+            onLoadQuiz={() => console.log('Cargar Quiz')}
+          />
+        )}
+      </Box>
     </ThemeProvider>
   );
 }

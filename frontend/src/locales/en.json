@@ -1,8 +1,8 @@
 {
     "lang": "English",
-    "language": "Language",
-    "welcome": "Welcome to the quiz creation app",
-    "instructions": "Here you can create questions in Aiken format for Moodle.",
-    "newQuiz": "New",
-    "loadQuiz": "Load"
+    "labLanguage": "Language",
+    "homeTitle": "Welcome to the quiz creation app",
+    "homeSubtitle": "Here you can create questions in Aiken format for Moodle.",
+    "actNewQuiz": "New",
+    "actLoadQuiz": "Load"
 }

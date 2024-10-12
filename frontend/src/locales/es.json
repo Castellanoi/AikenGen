@@ -1,8 +1,8 @@
 {
     "lang": "Español",
-    "language": "Idioma",
-    "welcome": "Bienvenido a la aplicación de creación de cuestionarios",
-    "instructions": "Aquí puedes crear preguntas para un cuestionario en formato Aiken para Moodle.",
-    "newQuiz": "Nuevo",
-    "loadQuiz": "Cargar"
+    "labLanguage": "Idioma",
+    "homeTitle": "Bienvenido a la aplicación de creación de cuestionarios",
+    "homeSubtitle": "Aquí puedes crear preguntas para un cuestionario en formato Aiken para Moodle.",
+    "actNewQuiz": "Nuevo",
+    "actLoadQuiz": "Cargar"
 }

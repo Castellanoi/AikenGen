@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, Radio, FormControlLabel } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Box, Typography, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Workspace({ onBack }) {
   const [question, setQuestion] = useState('');
@@ -7,6 +8,39 @@ function Workspace({ onBack }) {
   const [answerText, setAnswerText] = useState('');
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [questionCount, setQuestionCount] = useState(1);
+
+  const questionInputRef = useRef(null);
+  const answerInputRef = useRef(null);
+  const answerRefs = useRef([]);
+
+  // Navegación de inputs con flechas
+  const handleNavigation = (e, index, refType) => {
+    if (e.key === 'ArrowDown') {
+      if (refType === 'question') {
+        answerInputRef.current?.focus();
+      } else if (refType === 'newAnswer') {
+        if (answers.length > 0) {
+          answerRefs.current[0]?.focus();
+        }
+      } else if (index < answers.length - 1) {
+        answerRefs.current[index + 1]?.focus();
+      }
+    } else if (e.key === 'ArrowUp') {
+      if (refType === 'newAnswer') {
+        questionInputRef.current?.focus();
+      } else if (index === 0) {
+        answerInputRef.current?.focus();
+      } else {
+        answerRefs.current[index - 1]?.focus();
+      }
+    } else if (e.key === 'Enter') {
+      if (refType === 'question') {
+        answerInputRef.current?.focus();
+      } else if (refType === 'answer') {
+        answerInputRef.current?.focus();
+      }
+    }
+  };
 
   const handleAddAnswer = (e) => {
     if (e.key === 'Enter' && answerText) {
@@ -16,11 +50,9 @@ function Workspace({ onBack }) {
   };
 
   const handleSaveQuestion = () => {
-    // Lógica para guardar la pregunta y respuestas
     console.log('Pregunta:', question);
     console.log('Respuestas:', answers, 'Correctas:', correctAnswers);
 
-    // Limpiar los campos
     setQuestion('');
     setAnswers([]);
     setCorrectAnswers([]);
@@ -51,6 +83,8 @@ function Workspace({ onBack }) {
               label="Pregunta"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              inputRef={questionInputRef}
+              onKeyDown={(e) => handleNavigation(e, null, 'question')}
             />
           </Box>
 
@@ -59,12 +93,16 @@ function Workspace({ onBack }) {
               {String.fromCharCode(97 + answers.length)}.
             </Typography>
             <TextField
+              fullWidth
               variant="outlined"
               label="Respuesta"
               value={answerText}
               onChange={(e) => setAnswerText(e.target.value)}
-              onKeyDown={handleAddAnswer}
-              sx={{ width: '100%' }}
+              onKeyDown={(e) => {
+                handleAddAnswer(e);
+                handleNavigation(e, null, 'newAnswer');
+              }}
+              inputRef={answerInputRef}
             />
           </Box>
 
@@ -78,7 +116,7 @@ function Workspace({ onBack }) {
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <FormControlLabel
                 control={
-                  <Radio
+                  <Checkbox
                     checked={correctAnswers.includes(index)}
                     onChange={() => {
                       if (correctAnswers.includes(index)) {
@@ -104,18 +142,33 @@ function Workspace({ onBack }) {
                         setAnswers(updatedAnswers);
                       }}
                       sx={{ width: '100%' }}
+                      inputRef={(el) => (answerRefs.current[index] = el)}
+                      onKeyDown={(e) => handleNavigation(e, index, 'answer')}
                     />
+                    <Box
+                      sx={{ ml: 1, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                      onClick={() => {
+                        const updatedAnswers = answers.filter((_, i) => i !== index);
+                        setAnswers(updatedAnswers);
+
+                        setCorrectAnswers(
+                          correctAnswers
+                            .filter((i) => i !== index)
+                            .map((i) => (i > index ? i - 1 : i))
+                        );
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </Box>
                   </Box>
                 }
               />
             </Box>
           ))}
-
         </Box>
         <Button variant="contained" color="primary" onClick={onBack}>
           Atrás
         </Button>
-        {/* Aquí puedes agregar las preguntas */}
       </Box>
 
       <Box
@@ -128,9 +181,7 @@ function Workspace({ onBack }) {
         <Typography variant="h5" gutterBottom>
           Vista Previa
         </Typography>
-        <Box>
-          {/* Contenido que genera scroll */}
-        </Box>
+        <Box>{/* Contenido que genera scroll */}</Box>
       </Box>
     </Box>
   );

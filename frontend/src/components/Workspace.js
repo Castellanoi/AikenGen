@@ -1,13 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Typography, Button, TextField, Radio, FormControlLabel } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 function Workspace({ onBack }) {
   const [question, setQuestion] = useState('');
   const [answers, setAnswers] = useState([]);
   const [answerText, setAnswerText] = useState('');
-  const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [questionCount, setQuestionCount] = useState(1);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const questionInputRef = useRef(null);
   const answerInputRef = useRef(null);
@@ -51,12 +52,37 @@ function Workspace({ onBack }) {
 
   const handleSaveQuestion = () => {
     console.log('Pregunta:', question);
-    console.log('Respuestas:', answers, 'Correctas:', correctAnswers);
+    console.log('Respuestas:', answers, 'Correcta:', correctAnswerIndex);
 
     setQuestion('');
     setAnswers([]);
-    setCorrectAnswers([]);
+    setCorrectAnswerIndex(null);
     setQuestionCount((prevCount) => prevCount + 1);
+  };
+
+  const handleDeleteAnswer = (index) => {
+    setIsDeleting(true); // Indica que estamos eliminando
+    const updatedAnswers = answers.filter((_, i) => i !== index);
+    setAnswers(updatedAnswers);
+
+    // Si la respuesta eliminada era la correcta, se debe limpiar el índice correcto
+    if (correctAnswerIndex === index) {
+      setCorrectAnswerIndex(null);
+    } else if (correctAnswerIndex > index) {
+      // Ajustar el índice si la respuesta correcta estaba después de la eliminada
+      setCorrectAnswerIndex((prevIndex) => prevIndex - 1);
+    }
+    
+    // Restablecer el estado después de un breve retraso
+    setTimeout(() => {
+      setIsDeleting(false);
+    }, 0);
+  };
+
+  const handleRadioChange = (index) => {
+    if (!isDeleting) { // Solo cambia el índice si no se está eliminando
+      setCorrectAnswerIndex(index);
+    }
   };
 
   return (
@@ -116,15 +142,9 @@ function Workspace({ onBack }) {
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <FormControlLabel
                 control={
-                  <Checkbox
-                    checked={correctAnswers.includes(index)}
-                    onChange={() => {
-                      if (correctAnswers.includes(index)) {
-                        setCorrectAnswers(correctAnswers.filter((i) => i !== index));
-                      } else {
-                        setCorrectAnswers((prev) => [...prev, index]);
-                      }
-                    }}
+                  <Radio
+                    checked={correctAnswerIndex === index}
+                    onChange={() => handleRadioChange(index)} // Cambiar aquí
                   />
                 }
                 label={
@@ -147,16 +167,7 @@ function Workspace({ onBack }) {
                     />
                     <Box
                       sx={{ ml: 1, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                      onClick={() => {
-                        const updatedAnswers = answers.filter((_, i) => i !== index);
-                        setAnswers(updatedAnswers);
-
-                        setCorrectAnswers(
-                          correctAnswers
-                            .filter((i) => i !== index)
-                            .map((i) => (i > index ? i - 1 : i))
-                        );
-                      }}
+                      onClick={() => handleDeleteAnswer(index)}
                     >
                       <CloseIcon fontSize="small" />
                     </Box>

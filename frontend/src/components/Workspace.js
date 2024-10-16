@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, TextField, Radio, FormControlLabel, Switch } from '@mui/material';
+import { Box, Typography, Button, TextField, Radio, FormControlLabel, Switch, Fab, Paper, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -239,10 +239,10 @@ function Workspace({ onBack }) {
         </Box>
 
         {savedQuestions.map((savedQuestion, index) => (
-          <Box key={index} sx={{ mt: 2, position: 'relative', border: '1px solid gray', p: 2 }}>
-            {viewMode === 'card' ? (
-              editingIndex === index ? (
-                <Box>
+          viewMode === 'card' ? (
+            <Paper key={index} variant='outlined' sx={{ mt: 2, position: 'relative' }}>
+              {editingIndex === index ? (
+                <Box sx={{ p: 2 }}>
                   <TextField
                     fullWidth
                     multiline
@@ -293,7 +293,7 @@ function Workspace({ onBack }) {
                   </Button>
                 </Box>
               ) : (
-                <Box>
+                <Box sx={{ p: 2 }}>
                   <Typography variant="h6">{index + 1}. {savedQuestion.question}</Typography>
                   {savedQuestion.answers.map((answer, i) => (
                     <Box key={i} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -307,43 +307,43 @@ function Workspace({ onBack }) {
                       )}
                     </Box>
                   ))}
+                  <Divider sx={{ my: 1, ml: -2, mr: -2 }} />
                   <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                      variant="outlined"
+                    <Fab
+                      size='medium'
                       color="primary"
                       onClick={() => handleEditQuestion(index)}
-                      startIcon={<EditIcon />}
-                      sx={{ mr: 2 }}
+                      sx={{ mr: 1, boxShadow: 2 }}
                     >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
+                      <EditIcon size="large" />
+                    </Fab>
+                    <Fab
+                      size='medium'
+                      color="error"
                       onClick={() => handleDeleteQuestion(index)}
-                      startIcon={<CloseIcon />}
+                      sx={{ mr: 1, boxShadow: 2 }}
                     >
-                      Eliminar
-                    </Button>
+                      <CloseIcon size="large" />
+                    </Fab>
                   </Box>
                 </Box>
-              )
-            ) : (
-              <Box>
-                <Typography variant="body1">
-                  {savedQuestion.question}
+              )}
+            </Paper>
+          ) : (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="body1">
+                {savedQuestion.question}
+              </Typography>
+              {savedQuestion.answers.map((answer, answerIndex) => (
+                <Typography key={answerIndex}>
+                  {String.fromCharCode(65 + answerIndex)}) {answer}
                 </Typography>
-                {savedQuestion.answers.map((answer, answerIndex) => (
-                  <Typography key={answerIndex}>
-                    {String.fromCharCode(65 + answerIndex)}) {answer}
-                  </Typography>
-                ))}
-                <Typography variant="body1" sx={{ mt: 2 }}>
-                  {`ANSWER: ${String.fromCharCode(65 + savedQuestion.correctAnswerIndex)}`}
-                </Typography>
-              </Box>
-            )}
-          </Box>
+              ))}
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                {`ANSWER: ${String.fromCharCode(65 + savedQuestion.correctAnswerIndex)}`}
+              </Typography>
+            </Box>
+          )
         ))}
       </Box>
     </Box>

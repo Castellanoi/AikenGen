@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, TextField, Radio, FormControlLabel } from '@mui/material';
+import { Box, Typography, Button, TextField, Radio, FormControlLabel, Switch } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 function Workspace({ onBack }) {
   const [question, setQuestion] = useState('');
@@ -9,12 +11,14 @@ function Workspace({ onBack }) {
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [questionCount, setQuestionCount] = useState(1);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [viewMode, setViewMode] = useState('card');
+  const [savedQuestions, setSavedQuestions] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
 
   const questionInputRef = useRef(null);
   const answerInputRef = useRef(null);
   const answerRefs = useRef([]);
 
-  // Navegación de inputs con flechas
   const handleNavigation = (e, index, refType) => {
     if (e.key === 'ArrowDown') {
       if (refType === 'question') {
@@ -51,9 +55,13 @@ function Workspace({ onBack }) {
   };
 
   const handleSaveQuestion = () => {
-    console.log('Pregunta:', question);
-    console.log('Respuestas:', answers, 'Correcta:', correctAnswerIndex);
+    const newQuestion = {
+      question,
+      answers,
+      correctAnswerIndex,
+    };
 
+    setSavedQuestions((prev) => [...prev, newQuestion]);
     setQuestion('');
     setAnswers([]);
     setCorrectAnswerIndex(null);
@@ -61,28 +69,55 @@ function Workspace({ onBack }) {
   };
 
   const handleDeleteAnswer = (index) => {
-    setIsDeleting(true); // Indica que estamos eliminando
+    setIsDeleting(true);
     const updatedAnswers = answers.filter((_, i) => i !== index);
     setAnswers(updatedAnswers);
 
-    // Si la respuesta eliminada era la correcta, se debe limpiar el índice correcto
     if (correctAnswerIndex === index) {
       setCorrectAnswerIndex(null);
     } else if (correctAnswerIndex > index) {
-      // Ajustar el índice si la respuesta correcta estaba después de la eliminada
       setCorrectAnswerIndex((prevIndex) => prevIndex - 1);
     }
-    
-    // Restablecer el estado después de un breve retraso
+
     setTimeout(() => {
       setIsDeleting(false);
     }, 0);
   };
 
+  const handleDeleteQuestion = (index) => {
+    const updatedQuestions = savedQuestions.filter((_, i) => i !== index);
+    setSavedQuestions(updatedQuestions);
+
+    setQuestionCount((prevCount) => prevCount - 1);
+
+    if (editingIndex === index) {
+      setEditingIndex(null);
+    }
+  };
+
   const handleRadioChange = (index) => {
-    if (!isDeleting) { // Solo cambia el índice si no se está eliminando
+    if (!isDeleting) {
       setCorrectAnswerIndex(index);
     }
+  };
+
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === 'card' ? 'aiken' : 'card'));
+  };
+
+  const handleEditQuestion = (index) => {
+    setEditingIndex(index);
+  };
+
+  const handleSaveEditedQuestion = (index, editedQuestion, editedAnswers, editedCorrectIndex) => {
+    const updatedQuestions = [...savedQuestions];
+    updatedQuestions[index] = {
+      question: editedQuestion,
+      answers: editedAnswers,
+      correctAnswerIndex: editedCorrectIndex,
+    };
+    setSavedQuestions(updatedQuestions);
+    setEditingIndex(null);
   };
 
   return (
@@ -116,7 +151,7 @@ function Workspace({ onBack }) {
 
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Typography variant="h6" sx={{ mr: 1, minWidth: '40px', textAlign: 'right' }}>
-              {String.fromCharCode(97 + answers.length)}.
+              {String.fromCharCode(65 + answers.length)}.
             </Typography>
             <TextField
               fullWidth
@@ -144,13 +179,13 @@ function Workspace({ onBack }) {
                 control={
                   <Radio
                     checked={correctAnswerIndex === index}
-                    onChange={() => handleRadioChange(index)} // Cambiar aquí
+                    onChange={() => handleRadioChange(index)}
                   />
                 }
                 label={
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography sx={{ mr: 1, minWidth: '20px', textAlign: 'right' }}>
-                      {String.fromCharCode(97 + index)}):
+                      {String.fromCharCode(65 + index)}):
                     </Typography>
                     <TextField
                       variant="outlined"
@@ -192,7 +227,124 @@ function Workspace({ onBack }) {
         <Typography variant="h5" gutterBottom>
           Vista Previa
         </Typography>
-        <Box>{/* Contenido que genera scroll */}</Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography variant="body1" sx={{ mr: 2 }}>
+            Modo Tarjeta
+          </Typography>
+          <Switch checked={viewMode === 'aiken'} onChange={toggleViewMode} />
+          <Typography variant="body1" sx={{ ml: 2 }}>
+            Modo Aiken
+          </Typography>
+        </Box>
+
+        {savedQuestions.map((savedQuestion, index) => (
+          <Box key={index} sx={{ mt: 2, position: 'relative', border: '1px solid gray', p: 2 }}>
+            {viewMode === 'card' ? (
+              editingIndex === index ? (
+                <Box>
+                  <TextField
+                    fullWidth
+                    multiline
+                    value={savedQuestion.question}
+                    sx={{ mb: 1 }}
+                    onChange={(e) => {
+                      const updatedQuestions = [...savedQuestions];
+                      updatedQuestions[index].question = e.target.value;
+                      setSavedQuestions(updatedQuestions);
+                    }}
+                  />
+                  {savedQuestion.answers.map((answer, i) => (
+                    <Box key={i} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <Typography variant="h6" sx={{ mr: 1, minWidth: '40px', textAlign: 'right' }}>
+                        {String.fromCharCode(65 + i)}.
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        value={answer}
+                        onChange={(e) => {
+                          const updatedAnswers = [...savedQuestion.answers];
+                          updatedAnswers[i] = e.target.value;
+
+                          const updatedQuestions = [...savedQuestions];
+                          updatedQuestions[index].answers = updatedAnswers; // Aquí actualizas las respuestas dentro de la pregunta
+                          setSavedQuestions(updatedQuestions); // Y finalmente actualizas todo el conjunto de preguntas
+                        }}
+                      />
+
+                      <FormControlLabel
+                        control={<Radio checked={savedQuestion.correctAnswerIndex === i} />}
+                        label=""
+                        onClick={() => {
+                          const updatedQuestions = [...savedQuestions];
+                          updatedQuestions[index].correctAnswerIndex = i;
+                          setSavedQuestions(updatedQuestions);
+                        }}
+                      />
+                    </Box>
+                  ))}
+                  <Button
+                    variant="contained"
+                    onClick={() =>
+                      handleSaveEditedQuestion(index, savedQuestion.question, savedQuestion.answers, savedQuestion.correctAnswerIndex)
+                    }
+                  >
+                    Guardar cambios
+                  </Button>
+                </Box>
+              ) : (
+                <Box>
+                  <Typography variant="h6">{index + 1}. {savedQuestion.question}</Typography>
+                  {savedQuestion.answers.map((answer, i) => (
+                    <Box key={i} sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="body1" sx={{ mr: 1 }}>
+                        {String.fromCharCode(65 + i)}. {answer}
+                      </Typography>
+                      {savedQuestion.correctAnswerIndex === i && (
+                        <Typography variant="body1" sx={{ color: 'green', ml: 1, display: 'flex', alignItems: 'center' }}>
+                          <CheckCircleIcon fontSize="small" />
+                        </Typography>
+                      )}
+                    </Box>
+                  ))}
+                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => handleEditQuestion(index)}
+                      startIcon={<EditIcon />}
+                      sx={{ mr: 2 }}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => handleDeleteQuestion(index)}
+                      startIcon={<CloseIcon />}
+                    >
+                      Eliminar
+                    </Button>
+                  </Box>
+                </Box>
+              )
+            ) : (
+              <Box>
+                <Typography variant="body1">
+                  {savedQuestion.question}
+                </Typography>
+                {savedQuestion.answers.map((answer, answerIndex) => (
+                  <Typography key={answerIndex}>
+                    {String.fromCharCode(65 + answerIndex)}) {answer}
+                  </Typography>
+                ))}
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  {`ANSWER: ${String.fromCharCode(65 + savedQuestion.correctAnswerIndex)}`}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        ))}
       </Box>
     </Box>
   );

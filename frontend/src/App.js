@@ -15,7 +15,7 @@ import React, { useState, useEffect } from 'react';
 import { CssBaseline, ThemeProvider, createTheme, Box } from '@mui/material';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Workspace from './components/Workspace';
+import Workspace from './components/workspace/Workspace';
 
 function App() {
   // Acceder a los métodos expuestos por el preload
